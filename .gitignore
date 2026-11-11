@@ -1,0 +1,10 @@
+# ビルド生成物
+/build/
+
+# 仮削除フォルダ（作業ルール: 直接削除せずここへ移す）
+/_deleted/
+
+# フォント生成用ツール（tools/gen_fonts.ps1 を使うときだけ必要。README「フォントの作り直し」参照）
+/tools/node-*/
+/tools/_download/
+/tools/fontconv/node_modules/
