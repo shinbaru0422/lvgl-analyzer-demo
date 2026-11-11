@@ -11,7 +11,7 @@ constexpr int kBufferLines = 40;
 
 static_assert(sizeof(lv_color_t) == sizeof(std::uint32_t), "lv_conf.h の LV_COLOR_DEPTH は 32 にすること");
 
-bool g_initialized = false;
+[[maybe_unused]] bool g_initialized = false;  // 二重生成の検出用（assert が有効なデバッグビルドでだけ使う）
 
 }  // namespace
 

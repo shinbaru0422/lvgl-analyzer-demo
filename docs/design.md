@@ -182,5 +182,18 @@ GIF は前のフレームとの差分の矩形だけを記録し、変化して�
 | ビルド | VS2022 + CMake | クロスコンパイラ（Yocto / Buildroot の SDK）+ CMake のツールチェーンファイル |
 
 domain・usecase・adapter・runtime・ui のコードは変更しない想定。
+
+### 8.1 移植の実例: ブラウザ版（WebAssembly）
+
+この方針どおりに差し替えられるかを、ブラウザ向けの移植で実際に確かめた。追加・変更したのは次の部分だけで、
+domain・usecase・adapter・runtime・ui（画面）・フォントのコードは変えていない。
+
+| 部分 | ブラウザ版 |
+|---|---|
+| `IDisplaySink` / `IPointerSource` | `WebDisplayBackend`: `<canvas>` に変化した範囲だけを `putImageData` で描く。マウスと指のタッチを受け、CSS で拡大縮小された canvas の座標を 800×480 に換算する |
+| 配線（main） | `main_web.cpp`: ブラウザの描画周期（requestAnimationFrame）ごとに「制御を進める → LVGL を進める」 |
+| スレッド | 起動しない。GitHub Pages ではブラウザのマルチスレッド（SharedArrayBuffer）に必要な HTTP ヘッダーを設定できないため。`AnalyzerWorker::step()` を同じスレッドで呼ぶ（ヘッドレス版と同じ方式） |
+| ビルド | Emscripten 6.0.13（`tools/build_web.ps1`）。CMake は同じファイルで、`EMSCRIPTEN` のときだけブラウザ版のターゲットを作る |
+| 配布 | JavaScript と wasm を `index.html` 1 つに埋め込む（`-sSINGLE_FILE=1`。約 950 KB）。`.wasm` のダウンロードを止めるセキュリティソフトやプロキシがある環境でも動く |
 `std::format` を使っているため、Linux 側は GCC 13 以降（または fmt ライブラリへの置き換え）が必要。
 LVGL v8 には公式のドライバ集 `lv_drivers`（fbdev・evdev など）もあるため、自作せずそれを `IDisplaySink` の中で使う選択肢もある。

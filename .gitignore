@@ -1,5 +1,9 @@
-# ビルド生成物
+# ビルド生成物（docs/demo/ はブラウザ版の公開用なので管理する）
 /build/
+/build-web/
+
+# Emscripten SDK（tools/build_web.ps1 を使うときだけ必要）
+/tools/emsdk/
 
 # 仮削除フォルダ（作業ルール: 直接削除せずここへ移す）
 /_deleted/
